@@ -29,53 +29,53 @@ function App() {
     sessionStorage.setItem("usuarioKey", JSON.stringify(usuarioLogueado));
   }, [usuarioLogueado]);
 
-  useEffect(() => {
-    localStorage.setItem("serviciosKey", JSON.stringify(servicios));
-  }, [servicios]);
+  // useEffect(() => {
+  //   localStorage.setItem("serviciosKey", JSON.stringify(servicios));
+  // }, [servicios]);
 
   // logicar para trabajar con los sercicios
-  const crearServicio = (dataServicio: ServicioFormData) => {
-    const servicioNuevo: Servicio = {
-      ...dataServicio,
-      id: crypto.randomUUID(),
-    };
-    setServicios([...servicios, servicioNuevo]);
-  };
+  // const crearServicio = (dataServicio: ServicioFormData) => {
+  //   const servicioNuevo: Servicio = {
+  //     ...dataServicio,
+  //     id: crypto.randomUUID(),
+  //   };
+  //   setServicios([...servicios, servicioNuevo]);
+  // };
 
-  const borrarServicio = (idServicio: string) => {
-    const serviciosFiltrados = servicios.filter(
-      (itemServicio) => itemServicio.id !== idServicio,
-    );
-    setServicios(serviciosFiltrados);
-  };
+  // const borrarServicio = (idServicio: string) => {
+  //   const serviciosFiltrados = servicios.filter(
+  //     (itemServicio) => itemServicio.id !== idServicio,
+  //   );
+  //   setServicios(serviciosFiltrados);
+  // };
 
-  const editarServicio = (
-    idServicio: string,
-    servicioEditar: ServicioFormData,
-  ) => {
-    const serviciosEditados = servicios.map((itemServicio) => {
-      if (itemServicio.id === idServicio) {
-        return { ...itemServicio, ...servicioEditar };
-      }
-      return itemServicio;
-    });
-    setServicios(serviciosEditados);
-  };
+  // const editarServicio = (
+  //   idServicio: string,
+  //   servicioEditar: ServicioFormData,
+  // ) => {
+  //   const serviciosEditados = servicios.map((itemServicio) => {
+  //     if (itemServicio.id === idServicio) {
+  //       return { ...itemServicio, ...servicioEditar };
+  //     }
+  //     return itemServicio;
+  //   });
+  //   setServicios(serviciosEditados);
+  // };
 
-  const buscarServicio = (idServicio: string): Servicio | undefined => {
-    return servicios.find((item) => item.id === idServicio);
-  };
+  // const buscarServicio = (idServicio: string): Servicio | undefined => {
+  //   return servicios.find((item) => item.id === idServicio);
+  // };
 
   return (
     <AppContext.Provider
       value={{
         usuarioLogueado,
-        setUsuarioLogueado,
-        servicios,
-        crearServicio,
-        borrarServicio,
-        editarServicio,
-        buscarServicio
+        setUsuarioLogueado
+        // servicios
+        // crearServicio,
+        // borrarServicio,
+        // editarServicio,
+        // buscarServicio
       }}
     >
       <BrowserRouter>
