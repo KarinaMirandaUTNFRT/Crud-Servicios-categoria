@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import { useEffect, useState } from "react";
 import { AppContext } from "./context/AppContext";
-import type { Servicio, ServicioFormData } from "./interfaces/servicios";
+import type { Servicio } from "./interfaces/servicios";
 import DetalleServicio from "./components/pages/DetalleServicio";
 
 function App() {
@@ -20,10 +20,10 @@ function App() {
     usuarioSessionStorage,
   );
   // agregamos los servicios
-  const serviciosLocalStorage = JSON.parse(
-    localStorage.getItem("serviciosKey") || "[]",
-  );
-  const [servicios, setServicios] = useState<Servicio[]>(serviciosLocalStorage);
+  // const serviciosLocalStorage = JSON.parse(
+  //   localStorage.getItem("serviciosKey") || "[]",
+  // );
+  // const [servicios, setServicios] = useState<Servicio[]>(serviciosLocalStorage);
 
   useEffect(() => {
     sessionStorage.setItem("usuarioKey", JSON.stringify(usuarioLogueado));
@@ -70,7 +70,7 @@ function App() {
     <AppContext.Provider
       value={{
         usuarioLogueado,
-        setUsuarioLogueado
+        setUsuarioLogueado,
         // servicios
         // crearServicio,
         // borrarServicio,

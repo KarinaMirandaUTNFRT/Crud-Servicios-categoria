@@ -1,13 +1,14 @@
 import { Link } from "react-router";
 import ItemTabla from "../services/ItemTabla";
 import { LuCirclePlus } from "react-icons/lu";
-import { useAppContext } from "../../context/AppContext";
+// import { useAppContext } from "../../context/AppContext";
 import { listarServiciosApi } from "../../helpers/queries";
 import { useEffect, useState } from "react";
+import type { Servicio } from "../../interfaces/servicios";
 
 const Administrador = () => {
   // const { servicios } = useAppContext();
- const [servicios, setServicios] = useState([]);
+ const [servicios, setServicios] = useState<Servicio[]>([]);
 
   useEffect(() => {
     cargarServicios();

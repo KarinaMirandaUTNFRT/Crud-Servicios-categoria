@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
+// import { useAppContext } from "../../context/AppContext";
 import { listarServiciosApi } from "../../helpers/queries";
 import CardServicio from "../services/CardServicio";
+import type { Servicio } from "../../interfaces/servicios";
 
 const Inicio = () => {
   // const { servicios } = useAppContext();
-  const [servicios, setServicios] = useState([]);
+ const [servicios, setServicios] = useState<Servicio[]>([]);
 
   useEffect(() => {
     cargarServicios();
