@@ -1,6 +1,6 @@
 
 import { useParams, useNavigate, Link } from "react-router";
-import { useAppContext } from "../../context/AppContext";
+// import { useAppContext } from "../../context/AppContext";
 import { useEffect, useState } from "react";
 import { buscarServicioApi } from "../../helpers/queries";
 import type { Servicio } from "../../interfaces/servicios";
@@ -10,7 +10,7 @@ const DetalleServicio = () => {
     // const { buscarServicio } = useAppContext();
     const navigate = useNavigate();
     // 1. Creamos un estado para guardar el servicio una vez que llegue de la API
-    const [servicio, setServicio] = useState<Servicio>(null);
+    const [servicio, setServicio] = useState<Servicio | null>(null);
     const [cargando, setCargando] = useState<boolean>(true);
 
       useEffect(() => {

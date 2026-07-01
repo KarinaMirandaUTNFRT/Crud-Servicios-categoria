@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { Servicio } from "../../interfaces/servicios";
 import Swal from "sweetalert2";
-import { useAppContext } from "../../context/AppContext";
+//import { useAppContext } from "../../context/AppContext";
 import { LuTrash2, LuPencil } from "react-icons/lu";
 import { borrarServicioApi } from "../../helpers/queries";
 
