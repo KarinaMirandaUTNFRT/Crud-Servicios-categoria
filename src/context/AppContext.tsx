@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Servicio, ServicioFormData } from "../interfaces/servicios";
+//import type { Servicio, ServicioFormData } from "../interfaces/servicios";
 
 export interface AppContextType {
   usuarioLogueado: boolean;

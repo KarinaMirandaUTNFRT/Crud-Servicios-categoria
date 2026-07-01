@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import { useEffect, useState } from "react";
 import { AppContext } from "./context/AppContext";
-import type { Servicio } from "./interfaces/servicios";
+//import type { Servicio } from "./interfaces/servicios";
 import DetalleServicio from "./components/pages/DetalleServicio";
 
 function App() {
