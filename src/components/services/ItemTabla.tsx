@@ -8,9 +8,11 @@ import { borrarServicioApi } from "../../helpers/queries";
 interface ItemTablaProps {
   servicio: Servicio;
   fila: number;
+  // TIPADO CORRECTO: El despachador de un estado tipo Servicio[]
+  setServicios: React.Dispatch<React.SetStateAction<Servicio[]>>;
 }
 
-const ItemTabla = ({ servicio, fila }: ItemTablaProps) => {
+const ItemTabla = ({ servicio, fila, setServicios }: ItemTablaProps) => {
   // const { borrarServicio } = useAppContext();
 
   const eliminarServicio = () => {
@@ -27,7 +29,7 @@ const ItemTabla = ({ servicio, fila }: ItemTablaProps) => {
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-       const respuestaBorrarServicio = await borrarServicioApi(servicio._id);
+        const respuestaBorrarServicio = await borrarServicioApi(servicio._id);
         if (respuestaBorrarServicio && respuestaBorrarServicio.status === 200) {
           Swal.fire({
             title: "Eliminado",
@@ -37,6 +39,10 @@ const ItemTabla = ({ servicio, fila }: ItemTablaProps) => {
             color: "#f4f4f5",
             confirmButtonColor: "#3b82f6",
           });
+          // 2. Usamos el callback del SetState para leer el estado previo de forma segura
+          setServicios((prevServicios) =>
+            prevServicios.filter((item) => item._id !== servicio._id),
+          );
         }
       }
     });
