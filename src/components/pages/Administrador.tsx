@@ -2,9 +2,27 @@ import { Link } from "react-router";
 import ItemTabla from "../services/ItemTabla";
 import { LuCirclePlus } from "react-icons/lu";
 import { useAppContext } from "../../context/AppContext";
+import { listarServiciosApi } from "../../helpers/queries";
+import { useEffect, useState } from "react";
 
 const Administrador = () => {
-  const { servicios } = useAppContext();
+  // const { servicios } = useAppContext();
+ const [servicios, setServicios] = useState([]);
+
+  useEffect(() => {
+    cargarServicios();
+  }, []);
+
+    const cargarServicios = async() => {
+    const respuestaServicios = await listarServiciosApi();
+    console.log(respuestaServicios);
+    if(respuestaServicios && respuestaServicios.status === 200){
+      const datos = await respuestaServicios.json();
+      setServicios(datos)
+    }else{
+      alert('Ocurrio un error no se puede mostrar los productos en este momento')
+    }
+  };
 
   return (
     <section className="animate-fadeIn space-y-6">
@@ -50,7 +68,7 @@ const Administrador = () => {
             {servicios.length > 0 ? (
               servicios.map((servicio, indice) => (
                 <ItemTabla
-                  key={servicio.id}
+                  key={servicio._id}
                   servicio={servicio}
                   fila={indice + 1}
                 />

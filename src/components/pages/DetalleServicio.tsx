@@ -1,23 +1,49 @@
 
 import { useParams, useNavigate, Link } from "react-router";
 import { useAppContext } from "../../context/AppContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { buscarServicioApi } from "../../helpers/queries";
+import type { Servicio } from "../../interfaces/servicios";
 
 const DetalleServicio = () => {
     const { id } = useParams<{ id: string }>();
-    const { buscarServicio } = useAppContext();
+    // const { buscarServicio } = useAppContext();
     const navigate = useNavigate();
+    // 1. Creamos un estado para guardar el servicio una vez que llegue de la API
+    const [servicio, setServicio] = useState<Servicio>(null);
+    const [cargando, setCargando] = useState<boolean>(true);
 
-    // Buscar el servicio por id
-    const servicio = buscarServicio(id || '');
-
-    useEffect(() => {
-        if (!servicio) {
-            // Si no existe el servicio, redirigir a 404
-             navigate("/404", { replace: true });
+      useEffect(() => {
+        const obtenerServicio = async () => {
+            if (!id) return;
+            
+            try {
+                setCargando(true);
+                const respuesta = await buscarServicioApi(id);
+                
+                if (respuesta && respuesta.ok) {
+                    const datos: Servicio = await respuesta.json();
+                    setServicio(datos);
+                } else {
+                    // Si el status es 404 o similar, redirigimos
+                    navigate("/404", { replace: true });
+                }
+            } catch (error) {
+                console.error("Error al traer el servicio:", error);
+                navigate("/404", { replace: true });
+            } finally {
+                setCargando(false);
+            }
         }
-    }, [servicio, navigate]);
+     obtenerServicio();
+    }, [id, navigate]);
 
+   // 2. Mientras la API responde, mostramos un estado de carga
+    if (cargando) {
+        return <div className="text-center text-white mt-8">Cargando detalles del servicio...</div>;
+    }
+
+    // 3. Si terminó de cargar pero no hay servicio, evitamos el renderizado
     if (!servicio) {
         return null; 
     }

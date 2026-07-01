@@ -1,5 +1,5 @@
 export interface Servicio {
-  id: string;
+  _id: string;
   nombreServicio: string;
   precio: number;
   imagen: string;

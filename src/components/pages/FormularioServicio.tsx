@@ -1,9 +1,14 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { ServicioFormData } from "../../interfaces/servicios";
-import { useAppContext } from "../../context/AppContext";
+// import { useAppContext } from "../../context/AppContext";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
+import {
+  buscarServicioApi,
+  crearServicioApi,
+  editarServicioApi,
+} from "../../helpers/queries";
 
 interface FormularioServicioProps {
   titulo: string;
@@ -17,15 +22,21 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
     setValue,
   } = useForm<ServicioFormData>();
   // traigo los datos que necesito del contexto
-  const { crearServicio, buscarServicio, editarServicio } = useAppContext();
+  // const { crearServicio, buscarServicio, editarServicio } = useAppContext();
   // traer el id de la ruta
   const { id } = useParams<{ id: string }>();
   const navegacion = useNavigate();
-
+console.log(id)
   useEffect(() => {
-    if (titulo.includes("Editar") && id && buscarServicio) {
-      const servicioBuscado = buscarServicio(id);
-      if (servicioBuscado) {
+    cargarDatos();
+  }, []);
+
+  const cargarDatos = async () => {
+    if (titulo.includes("Editar") && id && buscarServicioApi) {
+      const respuestaServicio = await buscarServicioApi(id);
+      console.log(respuestaServicio)
+      if (respuestaServicio && respuestaServicio.status === 200) {
+        const servicioBuscado = await respuestaServicio.json();
         setValue("nombreServicio", servicioBuscado.nombreServicio);
         setValue("precio", servicioBuscado.precio);
         setValue("categoria", servicioBuscado.categoria);
@@ -33,12 +44,12 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
         setValue("imagen", servicioBuscado.imagen);
       }
     }
-  }, []);
+  };
 
   const onSubmit: SubmitHandler<ServicioFormData> = (data, e) => {
     console.log(data);
-    if (titulo.includes("Crear") && crearServicio) {
-      crearServicio(data);
+    if (titulo.includes("Crear") && crearServicioApi) {
+      crearServicioApi(data);
       Swal.fire({
         title: "Servicio creado",
         text: `El servicio '${data.nombreServicio}' fue creado correctamente`,
@@ -51,7 +62,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
         (e.target as HTMLFormElement).reset();
       }
     } else if (id) {
-      editarServicio(id, data);
+      editarServicioApi(id, data);
       Swal.fire({
         title: "Servicio editado",
         text: `El servicio '${data.nombreServicio}' fue editado correctamente`,
