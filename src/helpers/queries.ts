@@ -77,7 +77,7 @@ export const editarServicioApi = async ( id: string | number, servicio: Partial<
     }
 };
 
-
+//🆕 consultas para login de usuario
 export const loginBackendApi = async (email: string, password: string): Promise<Response> => {
   return fetch(`${urlUsuarios}/login`, {
     method: "POST",
@@ -107,3 +107,4 @@ export const obtenerPerfilApi = async (): Promise<Usuario> => {
 
   return respuesta.json();
 };
+//🆕 Fin consultas para login de usuario
