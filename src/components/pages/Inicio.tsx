@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEvent} from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 // import { useAppContext } from "../../context/AppContext";
 import { listarServiciosApi } from "../../helpers/queries";
 import CardServicio from "../services/CardServicio";
@@ -35,7 +35,7 @@ const Inicio = () => {
 
       if (respuestaServicios.ok) {
         const datos = await respuestaServicios.json();
-        // Con || (OR lógico)
+        // Con || (OR lógico) cualquier falsy 0, false, null, undefined
         // Con ?? (Fusión nula, Nullish Coalescing Operator)
         setServicios(datos.servicios ?? []); // ?? retorna B unicamente si es A es null
         setCantidadServicios(datos.cantidadServicios ?? 0);
@@ -101,7 +101,7 @@ const Inicio = () => {
             </div>
           </div>
         </div>
-
+        {/* formulario para filtrar */}
         <form
           onSubmit={handleBuscar}
           className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
@@ -134,7 +134,7 @@ const Inicio = () => {
           )}
         </form>
       </div>
-
+      {/* guilla de cards */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-xl border border-dashed border-zinc-800">
           <i className="bi bi-arrow-repeat animate-spin text-4xl text-zinc-700 mb-4"></i>
