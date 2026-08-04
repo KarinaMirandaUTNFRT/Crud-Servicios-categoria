@@ -11,71 +11,69 @@ import { useEffect, useState } from "react";
 import { AppContext } from "./context/AppContext";
 //import type { Servicio } from "./interfaces/servicios";
 import DetalleServicio from "./components/pages/DetalleServicio";
+import type { Usuario } from "./interfaces/usuarios";
+import { loginBackendApi, logoutBackendApi, obtenerPerfilApi } from "./helpers/queries";
 
 function App() {
-  const usuarioSessionStorage = JSON.parse(
-    sessionStorage.getItem("usuarioKey") || "false",
-  );
-  const [usuarioLogueado, setUsuarioLogueado] = useState<boolean>(
-    usuarioSessionStorage,
-  );
-  // agregamos los servicios
-  // const serviciosLocalStorage = JSON.parse(
-  //   localStorage.getItem("serviciosKey") || "[]",
-  // );
-  // const [servicios, setServicios] = useState<Servicio[]>(serviciosLocalStorage);
+
+  const [usuarioLogueado, setUsuarioLogueado] = useState<Usuario | null>(null);
+  const [loadingSession, setLoadingSession] = useState<boolean>(true);
+
+  const checkAuth = async () => {
+    try {
+      const perfil = await obtenerPerfilApi();
+      setUsuarioLogueado(perfil);
+    } catch {
+      setUsuarioLogueado(null);
+    } finally {
+      setLoadingSession(false);
+    }
+  };
+
+  const loginBackend = async (email: string, pass: string): Promise<Usuario | null> => {
+    setLoadingSession(true);
+    try {
+      const loginRes = await loginBackendApi(email, pass);
+      const loginData = await loginRes.json();
+
+      if (!loginRes.ok) {
+        throw new Error(loginData?.mensaje || "No se pudo iniciar sesión");
+      }
+      // Consultamos los datos actualizados del perfil
+      const perfil = await obtenerPerfilApi();
+      setUsuarioLogueado(perfil);
+      return perfil;
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setUsuarioLogueado(null);
+      throw error;
+    } finally {
+      setLoadingSession(false);
+    }
+  };
+
+  const logoutBackend = async () => {
+    try {
+      await logoutBackendApi();
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    } finally {
+      setUsuarioLogueado(null);
+    }
+  };
 
   useEffect(() => {
-    sessionStorage.setItem("usuarioKey", JSON.stringify(usuarioLogueado));
-  }, [usuarioLogueado]);
-
-  // useEffect(() => {
-  //   localStorage.setItem("serviciosKey", JSON.stringify(servicios));
-  // }, [servicios]);
-
-  // logicar para trabajar con los sercicios
-  // const crearServicio = (dataServicio: ServicioFormData) => {
-  //   const servicioNuevo: Servicio = {
-  //     ...dataServicio,
-  //     id: crypto.randomUUID(),
-  //   };
-  //   setServicios([...servicios, servicioNuevo]);
-  // };
-
-  // const borrarServicio = (idServicio: string) => {
-  //   const serviciosFiltrados = servicios.filter(
-  //     (itemServicio) => itemServicio.id !== idServicio,
-  //   );
-  //   setServicios(serviciosFiltrados);
-  // };
-
-  // const editarServicio = (
-  //   idServicio: string,
-  //   servicioEditar: ServicioFormData,
-  // ) => {
-  //   const serviciosEditados = servicios.map((itemServicio) => {
-  //     if (itemServicio.id === idServicio) {
-  //       return { ...itemServicio, ...servicioEditar };
-  //     }
-  //     return itemServicio;
-  //   });
-  //   setServicios(serviciosEditados);
-  // };
-
-  // const buscarServicio = (idServicio: string): Servicio | undefined => {
-  //   return servicios.find((item) => item.id === idServicio);
-  // };
+    checkAuth();
+  }, []);
 
   return (
     <AppContext.Provider
       value={{
         usuarioLogueado,
         setUsuarioLogueado,
-        // servicios
-        // crearServicio,
-        // borrarServicio,
-        // editarServicio,
-        // buscarServicio
+        loadingSession,
+        loginBackend,
+        logoutBackend,
       }}
     >
       <BrowserRouter>

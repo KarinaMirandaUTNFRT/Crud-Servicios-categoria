@@ -4,7 +4,7 @@ import type { Usuario } from "../interfaces/usuarios";
 export interface AppContextType {
   usuarioLogueado: Usuario | null;
   loadingSession: boolean; //nuevo state
-  setUsuarioLogueado: React.Dispatch<React.SetStateAction<boolean>>;
+  setUsuarioLogueado: React.Dispatch<React.SetStateAction<Usuario | null>>;
   loginBackend: (email: string, pass: string) => Promise<Usuario | null>; //funcion de login
   logoutBackend: () => Promise<void>; //funcion de logout
 
