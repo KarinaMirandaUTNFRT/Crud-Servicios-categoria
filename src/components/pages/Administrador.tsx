@@ -12,22 +12,26 @@ const Administrador = () => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [cantidadServicios, setCantidadServicios] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const limitePorPagina = 10;
+  const limitePorPagina = 5; //✅ desde aqui decido cuantos elementos voy a mostrar en la tabla
 
   useEffect(() => {
     cargarServicios(paginaActual);
   }, [paginaActual]);
 
   const cargarServicios = async (pagina = 1) => {
-     setIsLoading(true);
+    setIsLoading(true);
     try {
-      const respuestaServicios = await listarServiciosApi({ pagina, limite: limitePorPagina });
+      const respuestaServicios = await listarServiciosApi({
+        pagina,
+        limite: limitePorPagina,
+      });
       if (respuestaServicios && respuestaServicios.ok) {
         const datos = await respuestaServicios.json();
         setServicios(datos.servicios ?? []);
         setCantidadServicios(datos.cantidadServicios ?? 0);
         setTotalPaginas(datos.totalPaginas ?? 1);
-        if (typeof datos.paginaActual === 'number') setPaginaActual(datos.paginaActual);
+        if (typeof datos.paginaActual === "number")
+          setPaginaActual(datos.paginaActual);
       } else {
         setServicios([]);
         setCantidadServicios(0);
@@ -43,7 +47,7 @@ const Administrador = () => {
     }
   };
 
-    const cambiarPagina = (pagina: number) => {
+  const cambiarPagina = (pagina: number) => {
     if (pagina < 1 || pagina > totalPaginas || pagina === paginaActual) return;
     setPaginaActual(pagina);
   };
@@ -68,9 +72,8 @@ const Administrador = () => {
     //Ejemplo: Si current = 5, entonces left = 4. Como 4 > 2, la secuencia va [1, '...', 4]. Si current = 3, left = 2, la secuencia va [1, 2] sin puntos suspensivos.
     for (let i = left; i <= right; i++) {
       pages.push(i);
-    }// Recorre el rango desde left hasta right e inserta cada número en el arreglo pages. 
+    } // Recorre el rango desde left hasta right e inserta cada número en el arreglo pages.
     //Ejemplo: Si current = 5, incluirá 4, 5 y 6.
-
 
     if (right < total - 1) pages.push("...");
 
@@ -87,7 +90,7 @@ const Administrador = () => {
   Como right (6) < 19, se agrega '...' -> [1, '...', 4, 5, 6, '...']Se agrega 20 -> [1, '...', 4, 5, 6, '...', 20]
   Resultado devuelto: [1, '...', 4, 5, 6, '...', 20]
   */
-  
+
   return (
     <section className="animate-fadeIn space-y-6">
       {/* Header de la sección */}
@@ -109,88 +112,103 @@ const Administrador = () => {
         </Link>
       </div>
 
-      {/* Contenedor de la Tabla con Scroll Horizontal para móviles */}
-      <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/20">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-zinc-900/60 border-b border-zinc-800">
-              <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold">
-                #
-              </th>
-              <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold">
-                Servicio
-              </th>
-              <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold">
-                Precio
-              </th>
-              <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold text-center">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800/50">
-            {servicios.length > 0 ? (
-              servicios.map((servicio, indice) => (
-                <ItemTabla
-                  key={servicio._id}
-                  servicio={servicio}
-                  fila={(paginaActual - 1) * limitePorPagina + (indice + 1)} //actualizado
-                  setServicios={setServicios}
-                />
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={4}
-                  className="px-6 py-12 text-center text-zinc-500 italic"
-                >
-                  No hay servicios registrados para administrar.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      {/* Paginación */}
-      {totalPaginas > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-6">
-          <div className="text-sm text-zinc-400">Mostrando {servicios.length} de {cantidadServicios} resultados</div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={paginaActual === 1}
-              onClick={() => cambiarPagina(paginaActual - 1)}
-              className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
-            >
-              Anterior
-            </button>
-
-            {getVisiblePages(paginaActual, totalPaginas, 7).map((p, i) => (
-              typeof p === 'string' ? (
-                <span key={`dots-${i}`} className="px-3 py-1 text-sm text-zinc-500">{p}</span>
-              ) : (
-                <button
-                  key={`page-${p}`}
-                  type="button"
-                  onClick={() => cambiarPagina(p)}
-                  className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors border ${p === paginaActual ? 'bg-blue-600 text-white border-blue-600' : 'bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-zinc-200'}`}
-                >
-                  {p}
-                </button>
-              )
-            ))}
-
-            <button
-              type="button"
-              disabled={paginaActual === totalPaginas}
-              onClick={() => cambiarPagina(paginaActual + 1)}
-              className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
-            >
-              Siguiente
-            </button>
-          </div>
+      {isLoading ? (
+        <div>
+          <p className="text-center">Cargando datos...</p>
         </div>
+      ) : (
+        <>
+          {/* Contenedor de la Tabla con Scroll Horizontal para móviles */}
+          <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/20">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-zinc-900/60 border-b border-zinc-800">
+                  <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold">
+                    #
+                  </th>
+                  <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold">
+                    Servicio
+                  </th>
+                  <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold">
+                    Precio
+                  </th>
+                  <th className="px-6 py-4 text-xs uppercase tracking-wider text-zinc-500 font-bold text-center">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-800/50">
+                {servicios.length > 0 ? (
+                  servicios.map((servicio, indice) => (
+                    <ItemTabla
+                      key={servicio._id}
+                      servicio={servicio}
+                      fila={(paginaActual - 1) * limitePorPagina + (indice + 1)} //actualizado
+                      setServicios={setServicios}
+                    />
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-6 py-12 text-center text-zinc-500 italic"
+                    >
+                      No hay servicios registrados para administrar.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {/* Paginación */}
+          {totalPaginas > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-6">
+              <div className="text-sm text-zinc-400">
+                Mostrando {servicios.length} de {cantidadServicios} resultados
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={paginaActual === 1}
+                  onClick={() => cambiarPagina(paginaActual - 1)}
+                  className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
+                >
+                  Anterior
+                </button>
+
+                {getVisiblePages(paginaActual, totalPaginas, 7).map((p, i) =>
+                  typeof p === "string" ? (
+                    <span
+                      key={`dots-${i}`}
+                      className="px-3 py-1 text-sm text-zinc-500"
+                    >
+                      {p}
+                    </span>
+                  ) : (
+                    <button
+                      key={`page-${p}`}
+                      type="button"
+                      onClick={() => cambiarPagina(p)}
+                      className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors border ${p === paginaActual ? "bg-blue-600 text-white border-blue-600" : "bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-zinc-200"}`}
+                    >
+                      {p}
+                    </button>
+                  ),
+                )}
+
+                <button
+                  type="button"
+                  disabled={paginaActual === totalPaginas}
+                  onClick={() => cambiarPagina(paginaActual + 1)}
+                  className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
