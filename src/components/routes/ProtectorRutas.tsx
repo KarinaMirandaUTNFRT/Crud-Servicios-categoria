@@ -13,7 +13,7 @@ const ProtectorRutas = () => {
     );
   }
   // 2. Una vez que terminó de verificar: si no hay usuario o no es admin, redirige
-  if (!usuarioLogueado) {
+  if (!usuarioLogueado || usuarioLogueado.rol ==='cliente') {
     return <Navigate to="/login" replace />;
   }
   // 3. Si es admin y está autenticado, renderiza la ruta anidada

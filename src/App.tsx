@@ -41,6 +41,7 @@ function App() {
       }
       // Consultamos los datos actualizados del perfil
       const perfil = await obtenerPerfilApi();
+      console.log(perfil)
       setUsuarioLogueado(perfil);
       return perfil;
     } catch (error) {

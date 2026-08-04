@@ -9,43 +9,45 @@ interface LoginFormInputs {
 }
 
 const Login = () => {
-  const {setUsuarioLogueado} = useAppContext()
+  const { loginBackend, loadingSession } = useAppContext(); //actualizo las funciones de login y loading
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
-  const navegacion = useNavigate()
+  const navegacion = useNavigate();
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log(data);
-    //1- si los datos del formulario son correctos y coinciden con las credenciales del admin loguear al usuario
-      if (
-      data.email === import.meta.env.VITE_EMAIL &&
-      data.password === import.meta.env.VITE_PASSWORD
-    ) {
-      setUsuarioLogueado(true);
+  const onSubmit = async(data: LoginFormInputs) => {
+     try {
+      const usuario = await loginBackend(data.email, data.password);
+
       Swal.fire({
-        title: "Bienvenido Administrador",
+        title: `Bienvenido ${usuario?.nombre || "usuario"}`,
         text: "Ingresando al sistema",
         icon: "success",
         background: "#18181b",
         color: "#f4f4f5",
         confirmButtonColor: "#3b82f6",
       });
-      //redirecciono al admin
-      navegacion('/administrador');
-    } else {
+
+      if (usuario?.rol === "admin") {
+        navegacion("/administrador");
+      } else {
+        navegacion("/");
+      }
+    } catch (error) {
       Swal.fire({
         title: "Ocurrió un error",
-        text: "Credenciales incorrectas",
+        text:
+          error instanceof Error
+            ? error.message
+            : "Credenciales incorrectas",
         icon: "error",
         background: "#18181b",
         color: "#f4f4f5",
         confirmButtonColor: "#ef4444",
       });
     }
-  
   };
 
   return (
@@ -124,9 +126,10 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-blue-500 transition-all active:scale-95"
+              disabled={loadingSession} //si esta cargando el login deshabilito el boton
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-blue-500 transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Ingresar al sistema
+                {loadingSession ? "Ingresando..." : "Ingresar al sistema"}
             </button>
           </div>
         </form>
