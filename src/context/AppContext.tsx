@@ -1,18 +1,13 @@
 import { createContext, useContext } from "react";
 import type { Usuario } from "../interfaces/usuarios";
-//import type { Servicio, ServicioFormData } from "../interfaces/servicios";
 
 export interface AppContextType {
   usuarioLogueado: Usuario | null;
-  loadingSession: boolean;
+  loadingSession: boolean; //nuevo state
   setUsuarioLogueado: React.Dispatch<React.SetStateAction<boolean>>;
-   loginBackend: (email: string, pass: string) => Promise<Usuario | null>;
-  logoutBackend: () => Promise<void>;
-  // servicios: Servicio[];
-  // crearServicio: (nuevoServicio: ServicioFormData) => void;
-  // borrarServicio: (idServicio: string) => void;
-  // editarServicio: (idServicio: string, servicioEditar: ServicioFormData) => void;
-  // buscarServicio: (idServicio: string) => Servicio | undefined;
+  loginBackend: (email: string, pass: string) => Promise<Usuario | null>; //funcion de login
+  logoutBackend: () => Promise<void>; //funcion de logout
+
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
