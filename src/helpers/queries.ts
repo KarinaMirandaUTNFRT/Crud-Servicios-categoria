@@ -42,6 +42,7 @@ export const listarServiciosApi = async (
   }
 };
 
+// 🆕 se agregaró obtener las categorias
 export const listarCategoriasApi = async (): Promise<Response> => {
   try {
     const respuesta = await fetch(urlCategorias);

@@ -30,7 +30,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
 
   useEffect(() => {
-    cargarCategorias();
+    cargarCategorias(); //nuevo cargo las categorias
     cargarDatos();
   }, []);
 
@@ -53,7 +53,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
         const servicioBuscado = await respuestaServicio.json();
         setValue("nombreServicio", servicioBuscado.nombreServicio);
         setValue("precio", servicioBuscado.precio);
-        const categoriaId = servicioBuscado.categoria?._id ?? servicioBuscado.categoria;
+        const categoriaId = servicioBuscado.categoria?._id ?? servicioBuscado.categoria; //cargo el id de la categoria en el select del formulario
         setValue("categoria", categoriaId);
         setValue("descripcion", servicioBuscado.descripcion);
         setValue("imagen", servicioBuscado.imagen);
