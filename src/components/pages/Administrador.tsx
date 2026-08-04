@@ -7,24 +7,87 @@ import { useEffect, useState } from "react";
 import type { Servicio } from "../../interfaces/servicios";
 
 const Administrador = () => {
-  // const { servicios } = useAppContext();
- const [servicios, setServicios] = useState<Servicio[]>([]);
+  const [servicios, setServicios] = useState<Servicio[]>([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const [cantidadServicios, setCantidadServicios] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const limitePorPagina = 10;
 
   useEffect(() => {
-    cargarServicios();
-  }, []);
+    cargarServicios(paginaActual);
+  }, [paginaActual]);
 
-    const cargarServicios = async() => {
-    const respuestaServicios = await listarServiciosApi();
-    console.log(respuestaServicios);
-    if(respuestaServicios && respuestaServicios.status === 200){
-      const datos = await respuestaServicios.json();
-      setServicios(datos)
-    }else{
-      alert('Ocurrio un error no se puede mostrar los productos en este momento')
+  const cargarServicios = async (pagina = 1) => {
+     setIsLoading(true);
+    try {
+      const respuestaServicios = await listarServiciosApi({ pagina, limite: limitePorPagina });
+      if (respuestaServicios && respuestaServicios.ok) {
+        const datos = await respuestaServicios.json();
+        setServicios(datos.servicios ?? []);
+        setCantidadServicios(datos.cantidadServicios ?? 0);
+        setTotalPaginas(datos.totalPaginas ?? 1);
+        if (typeof datos.paginaActual === 'number') setPaginaActual(datos.paginaActual);
+      } else {
+        setServicios([]);
+        setCantidadServicios(0);
+        setTotalPaginas(1);
+      }
+    } catch (error) {
+      console.error(error);
+      setServicios([]);
+      setCantidadServicios(0);
+      setTotalPaginas(1);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+    const cambiarPagina = (pagina: number) => {
+    if (pagina < 1 || pagina > totalPaginas || pagina === paginaActual) return;
+    setPaginaActual(pagina);
+  };
+
+  const getVisiblePages = (current: number, total: number, maxButtons = 7) => {
+    // /current: La página en la que el usuario se encuentra parado actualmente (ej. 5).
+    //total: La cantidad total de páginas disponibles (ej. 20).
+    //maxButtons: El límite de botones a mostrar antes de truncar la lista (por defecto 7).
+    // returns array of numbers and '...' strings
+
+    //si el total no excede la cantidad maxima de botones, dibujo un array con numeros correlativos, total=5 [1, 2, 3, 4, 5]
+    if (total <= maxButtons)
+      return Array.from({ length: total }, (_, i) => i + 1);
+
+    const pages: Array<number | string> = []; // pages: Arreglo acumulador donde se irán guardando números (number) o puntos suspensivos (string).
+    const left = Math.max(2, current - 1); //left y right sirven para dibujar los numeros en el centro del paginador, sin tomar el inicio 1 y el final que seria total, por eso left arranca desde 2, y right es -1 del total
+    const right = Math.min(total - 1, current + 1);
+
+    pages.push(1); //agrego el boton 1
+
+    if (left > 2) pages.push("..."); //Si left es mayor a 2, significa que hay una brecha entre la primera página (1) y el inicio del bloque central (left).
+    //Ejemplo: Si current = 5, entonces left = 4. Como 4 > 2, la secuencia va [1, '...', 4]. Si current = 3, left = 2, la secuencia va [1, 2] sin puntos suspensivos.
+    for (let i = left; i <= right; i++) {
+      pages.push(i);
+    }// Recorre el rango desde left hasta right e inserta cada número en el arreglo pages. 
+    //Ejemplo: Si current = 5, incluirá 4, 5 y 6.
+
+
+    if (right < total - 1) pages.push("...");
+
+    pages.push(total);
+    return pages;
+  };
+  /*
+  Si estás en la página 5 de 20 páginas (getVisiblePages(5, 20)):
+  left = Math.max(2, 4) = 4
+  right = Math.min(19, 6) = 6
+  Se agrega 1 -> [1]
+  Como left (4) > 2, se agrega '...' -> [1, '...']
+  Bucle del 4 al 6 -> [1, '...', 4, 5, 6]
+  Como right (6) < 19, se agrega '...' -> [1, '...', 4, 5, 6, '...']Se agrega 20 -> [1, '...', 4, 5, 6, '...', 20]
+  Resultado devuelto: [1, '...', 4, 5, 6, '...', 20]
+  */
+  
   return (
     <section className="animate-fadeIn space-y-6">
       {/* Header de la sección */}
@@ -71,7 +134,7 @@ const Administrador = () => {
                 <ItemTabla
                   key={servicio._id}
                   servicio={servicio}
-                  fila={indice + 1}
+                  fila={(paginaActual - 1) * limitePorPagina + (indice + 1)} //actualizado
                   setServicios={setServicios}
                 />
               ))
@@ -88,6 +151,47 @@ const Administrador = () => {
           </tbody>
         </table>
       </div>
+      {/* Paginación */}
+      {totalPaginas > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-6">
+          <div className="text-sm text-zinc-400">Mostrando {servicios.length} de {cantidadServicios} resultados</div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={paginaActual === 1}
+              onClick={() => cambiarPagina(paginaActual - 1)}
+              className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
+            >
+              Anterior
+            </button>
+
+            {getVisiblePages(paginaActual, totalPaginas, 7).map((p, i) => (
+              typeof p === 'string' ? (
+                <span key={`dots-${i}`} className="px-3 py-1 text-sm text-zinc-500">{p}</span>
+              ) : (
+                <button
+                  key={`page-${p}`}
+                  type="button"
+                  onClick={() => cambiarPagina(p)}
+                  className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors border ${p === paginaActual ? 'bg-blue-600 text-white border-blue-600' : 'bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-zinc-200'}`}
+                >
+                  {p}
+                </button>
+              )
+            ))}
+
+            <button
+              type="button"
+              disabled={paginaActual === totalPaginas}
+              onClick={() => cambiarPagina(paginaActual + 1)}
+              className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
