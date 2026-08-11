@@ -72,7 +72,3 @@ mira la demo del proyecto [aqui](https://catalogo-servicios-c23.netlify.app/)
 ├── vite.config.ts
 └── README.md
 ```
-
-## 👩🏻‍💻 Autor
-
-Hecho con 💜 por [Emilse Arias](https://github.com/emiarias)
