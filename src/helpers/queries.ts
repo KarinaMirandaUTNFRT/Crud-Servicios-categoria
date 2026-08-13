@@ -1,5 +1,3 @@
-// 1. Definimos la interfaz de cómo luce un Servicio en tu app
-// Modifica los campos según lo que realmente use tu base de datos
 import type { Servicio, ServicioFormData } from "../interfaces/servicios";
 import type { Usuario } from "../interfaces/usuarios";
 
@@ -7,12 +5,7 @@ const urlServicios = import.meta.env.VITE_SERVICIO + "/servicios";
 const urlCategorias = import.meta.env.VITE_SERVICIO + "/categorias";
 const urlUsuarios = import.meta.env.VITE_SERVICIO + "/usuarios";
 
-// 2. Tipamos las funciones.
-// Nota: 'fetch' por defecto retorna una Promesa con un objeto 'Response'
-// 🆕 agregue el filtro de busqueda y paginación
-
 export interface ListarServiciosParams {
-  // support both legacy frontend names and backend names
   paginaNumero?: number;
   cantServicios?: number;
   pagina?: number;
@@ -25,7 +18,6 @@ export const listarServiciosApi = async (
 ): Promise<Response> => {
   try {
     const query = new URLSearchParams();
-    // Backend espera `pagina` y `limite`. el termino es optativo
     const pagina = params.pagina ?? params.paginaNumero ?? 1;
     const limite = params.limite ?? params.cantServicios ?? 8;
     query.set("pagina", String(pagina));
@@ -38,11 +30,10 @@ export const listarServiciosApi = async (
     return respuesta;
   } catch (error) {
     console.error(error);
-    throw error; // Es mejor lanzar el error para que el componente que llama a la API sepa que falló
+    throw error;
   }
 };
 
-// 🆕 se agregaró obtener las categorias
 export const listarCategoriasApi = async (): Promise<Response> => {
   try {
     const respuesta = await fetch(urlCategorias);
@@ -63,6 +54,7 @@ export const crearServicioApi = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify(servicio),
+      credentials: "include",
     });
     return respuesta;
   } catch (error) {
@@ -77,6 +69,7 @@ export const borrarServicioApi = async (
   try {
     const respuesta = await fetch(`${urlServicios}/${id}`, {
       method: "DELETE",
+      credentials: "include",
     });
     return respuesta;
   } catch (error) {
@@ -97,8 +90,6 @@ export const buscarServicioApi = async (
   }
 };
 
-// En el PUT, usamos Partial<Servicio> si solo envías los campos modificados,
-// o directamente 'Servicio' si mandas el objeto completo.
 export const editarServicioApi = async (
   id: string | number,
   servicio: Partial<Servicio>,
@@ -109,6 +100,7 @@ export const editarServicioApi = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(servicio),
     });
     return respuesta;
@@ -118,7 +110,6 @@ export const editarServicioApi = async (
   }
 };
 
-//🆕 consultas para login de usuario
 export const loginBackendApi = async (
   email: string,
   password: string,
@@ -151,4 +142,3 @@ export const obtenerPerfilApi = async (): Promise<Usuario> => {
 
   return respuesta.json();
 };
-//🆕 Fin consultas para login de usuario
