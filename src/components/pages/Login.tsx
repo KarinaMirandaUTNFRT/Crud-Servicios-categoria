@@ -22,7 +22,7 @@ const Login = () => {
       const usuario = await loginBackend(data.email, data.password);
 
       Swal.fire({
-        title: `Bienvenido ${usuario?.nombre || "usuario"}`,
+        title: `Bienvenido/a ${usuario?.nombreUsuario || "Usuario"}`,
         text: "Ingresando al sistema",
         icon: "success",
         background: "#18181b",
