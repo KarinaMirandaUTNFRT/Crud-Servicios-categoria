@@ -8,7 +8,7 @@ const Menu = () => {
   const { usuarioLogueado, loadingSession, logoutBackend } = useAppContext();
   const navegacion = useNavigate();
 
-  const isAdmin = usuarioLogueado?.rol === "admin";
+  const isAdmin = usuarioLogueado?.rol === "Admin";
 
   const navLinkStyles = ({ isActive }: { isActive: boolean }) =>
     `block py-2 px-3 transition-colors duration-200 md:p-0 ${

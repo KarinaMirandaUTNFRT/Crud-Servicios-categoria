@@ -28,7 +28,7 @@ export const listarServiciosApi = async (
     const pagina = params.pagina ?? params.paginaNumero ?? 1;
     const limite = params.limite ?? params.cantServicios ?? 8;
     query.set("pagina", String(pagina));
-    query.set("limite", String(limite));
+    query.set("cantServicio", String(limite));
     if (params.termino) {
       query.set("termino", params.termino);
     }
