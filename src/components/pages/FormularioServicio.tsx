@@ -59,7 +59,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
     }
   };
 
-  const onSubmit: SubmitHandler<ServicioFormData> = (data, e) => {
+  const onSubmit: SubmitHandler<ServicioFormData> = async (data, e) => {
     console.log(data);
     if (titulo.includes("Crear") && crearServicioApi) {
       crearServicioApi(data);
@@ -75,7 +75,10 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
         (e.target as HTMLFormElement).reset();
       }
     } else if (id) {
-      editarServicioApi(id, data);
+      const respuesta = await editarServicioApi(id, data);
+      if(respuesta.ok){
+
+      
       Swal.fire({
         title: "Servicio editado",
         text: `El servicio '${data.nombreServicio}' fue editado correctamente`,
@@ -84,6 +87,16 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
         color: "#f4f4f5",
         confirmButtonColor: "#3b82f6",
       });
+    }else{
+      Swal.fire({
+        title: "ocurrio un error ",
+        text: `El servicio '${data.nombreServicio}' fue editado correctamente`,
+        icon: "success",
+        background: "#18181b",
+        color: "#f4f4f5",
+        confirmButtonColor: "#3b82f6",
+    });
+  }
       navegacion("/administrador");
     }
   };
