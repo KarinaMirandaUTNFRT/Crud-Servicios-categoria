@@ -1,6 +1,6 @@
 // 1. Definimos la interfaz de cómo luce un Servicio en tu app
 // Modifica los campos según lo que realmente use tu base de datos
-import type { Servicio } from "../interfaces/servicios";
+import type { Servicio, ServicioFormData } from "../interfaces/servicios";
 import type { Usuario } from "../interfaces/usuarios";
 
 const urlServicios = import.meta.env.VITE_SERVICIO + "/servicios";
@@ -51,7 +51,7 @@ export const listarCategoriasApi = async (): Promise<Response> => {
   }
 };
 export const crearServicioApi = async (
-  servicio: Servicio,
+  servicio: ServicioFormData,
 ): Promise<Response> => {
   try {
     const respuesta = await fetch(urlServicios, {

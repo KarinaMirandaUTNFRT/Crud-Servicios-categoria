@@ -69,7 +69,7 @@ const ItemTabla = ({ servicio, fila, setServicios }: ItemTablaProps) => {
           </Link>
           <button
             className="text-red-500 hover:text-red-400 transition-colors flex items-center gap-1"
-            onClick={eliminarServicio}
+            onClick={() => eliminarServicio}
           >
             <LuTrash2 /> Borrar
           </button>
