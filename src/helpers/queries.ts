@@ -60,6 +60,7 @@ export const crearServicioApi = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify(servicio),
+      credentials:'include'
     });
     return respuesta;
   } catch (error) {
@@ -74,6 +75,7 @@ export const borrarServicioApi = async (
   try {
     const respuesta = await fetch(`${urlServicios}/${id}`, {
       method: "DELETE",
+      credentials:'include'
     });
     return respuesta;
   } catch (error) {
@@ -107,6 +109,7 @@ export const editarServicioApi = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify(servicio),
+      credentials:'include'
     });
     return respuesta;
   } catch (error) {

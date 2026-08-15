@@ -52,7 +52,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
         setValue("nombreServicio", servicioBuscado.nombreServicio);
         setValue("precio", servicioBuscado.precio);
          const categoriaId = servicioBuscado.categoria?._id ?? servicioBuscado.categoria;
-        setValue("categoria", servicioBuscado.categoria);
+        setValue("categoria", categoriaId);
         setValue("descripcion", servicioBuscado.descripcion);
         setValue("imagen", servicioBuscado.imagen);
       }
@@ -164,7 +164,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
                     value={categoria._id}
                     className="bg-zinc-900"
                   >
-                    {categoria.nombre}
+                    {categoria.nombreCat}
                   </option>
                 ))}
               </select>
