@@ -5,6 +5,7 @@ import type { Usuario } from "../interfaces/usuarios";
 
 const urlServicios = import.meta.env.VITE_SERVICIO + "/servicios";
 const urlUsuarios = import.meta.env.VITE_SERVICIO + "/usuarios";
+const urlCategorias = import.meta.env.VITE_SERVICIO + "/categorias";
 
 // 2. Tipamos las funciones.
 // Nota: 'fetch' por defecto retorna una Promesa con un objeto 'Response'
@@ -40,7 +41,15 @@ export const listarServiciosApi = async (
     throw error; // Es mejor lanzar el error para que el componente que llama a la API sepa que falló
   }
 };
-
+export const listarCategoriasApi = async (): Promise<Response> => {
+  try {
+    const respuesta = await fetch(urlCategorias);
+    return respuesta;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const crearServicioApi = async (
   servicio: Servicio,
 ): Promise<Response> => {

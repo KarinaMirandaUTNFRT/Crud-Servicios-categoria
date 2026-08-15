@@ -1,13 +1,14 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { ServicioFormData } from "../../interfaces/servicios";
+import type { Categoria, ServicioFormData } from "../../interfaces/servicios";
 // import { useAppContext } from "../../context/AppContext";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   buscarServicioApi,
   crearServicioApi,
   editarServicioApi,
+  listarCategoriasApi,
 } from "../../helpers/queries";
 
 interface FormularioServicioProps {
@@ -26,19 +27,31 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
   // traer el id de la ruta
   const { id } = useParams<{ id: string }>();
   const navegacion = useNavigate();
-console.log(id)
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+
   useEffect(() => {
+    cargarCategorias();
     cargarDatos();
   }, []);
-
+  const cargarCategorias = async () => {
+    try {
+      const respuestaCategorias = await listarCategoriasApi();
+      if (respuestaCategorias.ok) {
+        const listaCategorias = await respuestaCategorias.json();
+        setCategorias(listaCategorias);
+      }
+    } catch (error) {
+      console.error("Error cargando categorías:", error);
+    }
+  };
   const cargarDatos = async () => {
     if (titulo.includes("Editar") && id && buscarServicioApi) {
       const respuestaServicio = await buscarServicioApi(id);
-      console.log(respuestaServicio)
       if (respuestaServicio && respuestaServicio.status === 200) {
         const servicioBuscado = await respuestaServicio.json();
         setValue("nombreServicio", servicioBuscado.nombreServicio);
         setValue("precio", servicioBuscado.precio);
+         const categoriaId = servicioBuscado.categoria?._id ?? servicioBuscado.categoria;
         setValue("categoria", servicioBuscado.categoria);
         setValue("descripcion", servicioBuscado.descripcion);
         setValue("imagen", servicioBuscado.imagen);
@@ -145,15 +158,15 @@ console.log(id)
                 <option value="" className="bg-zinc-900">
                   Seleccione una opción
                 </option>
-                <option value="Desarrollo Web" className="bg-zinc-900">
-                  Desarrollo Web
-                </option>
-                <option value="Backend & API" className="bg-zinc-900">
-                  Backend & API
-                </option>
-                <option value="Consultoría" className="bg-zinc-900">
-                  Consultoría
-                </option>
+                {categorias.map((categoria) => (
+                  <option
+                    key={categoria._id}
+                    value={categoria._id}
+                    className="bg-zinc-900"
+                  >
+                    {categoria.nombre}
+                  </option>
+                ))}
               </select>
               <p className="text-red-500 text-xs mt-1 italic">
                 {errors.categoria?.message}
