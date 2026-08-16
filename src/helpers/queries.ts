@@ -27,14 +27,22 @@ export const listarServiciosApi = async (
     const query = new URLSearchParams();
     // Backend espera `pagina` y `limite`. el termino es optativo
     const pagina = params.pagina ?? params.paginaNumero ?? 1;
-    const limite = params.limite ?? params.cantServicios ?? 8;
+    const limite = params.limite ?? params.cantServicios ?? 12;
     query.set("pagina", String(pagina));
+    query.set("limite", String(limite));
     query.set("cantServicio", String(limite));
     if (params.termino) {
       query.set("termino", params.termino);
     }
 
-    const respuesta = await fetch(`${urlServicios}?${query.toString()}`);
+    const respuesta = await fetch(`${urlServicios}?${query.toString()}`,
+  {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+  });
     return respuesta;
   } catch (error) {
     console.error(error);
@@ -44,6 +52,9 @@ export const listarServiciosApi = async (
 export const listarCategoriasApi = async (): Promise<Response> => {
   try {
     const respuesta = await fetch(urlCategorias);
+    
+    
+    
     return respuesta;
   } catch (error) {
     console.error(error);

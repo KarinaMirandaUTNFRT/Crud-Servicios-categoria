@@ -91,7 +91,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
       Swal.fire({
         title: "ocurrio un error ",
         text: `El servicio '${data.nombreServicio}' fue editado correctamente`,
-        icon: "success",
+        icon: "error",
         background: "#18181b",
         color: "#f4f4f5",
         confirmButtonColor: "#3b82f6",

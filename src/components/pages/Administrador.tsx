@@ -27,11 +27,16 @@ const Administrador = () => {
       });
       if (respuestaServicios && respuestaServicios.ok) {
         const datos = await respuestaServicios.json();
+        
+        
         setServicios(datos.servicios ?? []);
         setCantidadServicios(datos.cantidadServicios ?? 0);
         setTotalPaginas(datos.totalPaginas ?? 1);
         if (typeof datos.paginaActual === "number")
           setPaginaActual(datos.paginaActual);
+      
+      
+      
       } else {
         setServicios([]);
         setCantidadServicios(0);
@@ -51,8 +56,7 @@ const Administrador = () => {
     if (pagina < 1 || pagina > totalPaginas || pagina === paginaActual) return;
     setPaginaActual(pagina);
   };
-
-  const getVisiblePages = (current: number, total: number, maxButtons = 7) => {
+const getVisiblePages = (current: number, total: number, maxButtons = 7) => {
     // /current: La página en la que el usuario se encuentra parado actualmente (ej. 5).
     //total: La cantidad total de páginas disponibles (ej. 20).
     //maxButtons: El límite de botones a mostrar antes de truncar la lista (por defecto 7).
@@ -90,7 +94,7 @@ const Administrador = () => {
   Como right (6) < 19, se agrega '...' -> [1, '...', 4, 5, 6, '...']Se agrega 20 -> [1, '...', 4, 5, 6, '...', 20]
   Resultado devuelto: [1, '...', 4, 5, 6, '...', 20]
   */
-
+  
   return (
     <section className="animate-fadeIn space-y-6">
       {/* Header de la sección */}
@@ -162,9 +166,10 @@ const Administrador = () => {
           </div>
           {/* Paginación */}
           {totalPaginas > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 px-2">
               <div className="text-sm text-zinc-400">
-                Mostrando {servicios.length} de {cantidadServicios} resultados
+                Mostrando <span className="text-zinc-200 font-semibold">{servicios.length}</span> de{" "}
+                <span className="text-zinc-200 font-semibold">{cantidadServicios}</span> resultados
               </div>
 
               <div className="flex items-center gap-2">
@@ -172,7 +177,9 @@ const Administrador = () => {
                   type="button"
                   disabled={paginaActual === 1}
                   onClick={() => cambiarPagina(paginaActual - 1)}
-                  className="px-3 py-1 rounded-md text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
+                  className="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 
+                             bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 
+                             disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Anterior
                 </button>
