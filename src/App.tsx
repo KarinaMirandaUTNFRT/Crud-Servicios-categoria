@@ -9,7 +9,6 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import { useEffect, useState } from "react";
 import { AppContext } from "./context/AppContext";
-//import type { Servicio } from "./interfaces/servicios";
 import DetalleServicio from "./components/pages/DetalleServicio";
 import type { Usuario } from "./interfaces/usuarios";
 import { loginBackendApi, logoutBackendApi, obtenerPerfilApi } from "./helpers/queries";
@@ -78,9 +77,9 @@ function App() {
       }}
     >
       <BrowserRouter>
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
+        <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between">
           <Menu />
-          <main className="container grow mx-auto px-4 py-8">
+          <main className="min-h-screen overflow-y-auto container grow mx-auto px-4 py-8">
             <Routes>
               <Route path="/" element={<Inicio></Inicio>} />
               <Route path="/login" element={<Login></Login>} />

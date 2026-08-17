@@ -12,7 +12,7 @@ const Administrador = () => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [cantidadServicios, setCantidadServicios] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const limitePorPagina = 5; //✅ desde aqui decido cuantos elementos voy a mostrar en la tabla
+  const limitePorPagina = 10; //✅ desde aqui decido cuantos elementos voy a mostrar en la tabla
 
   useEffect(() => {
     cargarServicios(paginaActual);
@@ -96,9 +96,9 @@ const getVisiblePages = (current: number, total: number, maxButtons = 7) => {
   */
   
   return (
-    <section className="animate-fadeIn space-y-6">
+    <section className=" animate-fadeIn space-y-6">
       {/* Header de la sección */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-zinc-900/40 p-6 rounded-2xl border border-zinc-800">
+      <div className="  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-zinc-900/40 p-6 rounded-2xl border border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white">
             Panel de Administración
