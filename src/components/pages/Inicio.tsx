@@ -157,20 +157,12 @@ const Inicio = () => {
 
 
               {/* botones de paginacion */}
-              <div className="inline-flex items-center gap-1.5">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 <button
                   type="button"
                   disabled={paginaActual === 1}
                   onClick={() => cambiarPagina(paginaActual - 1)}
-                  className="px-4 py-2 rounded-ml 
-                  text-sm 
-                  font-semibold
-                  transition-colors 
-                  disabled:opacity-40 
-                  disabled:cursor-not-allowed
-                   bg-zinc-900 border
-                    border-zinc-800
-                     hover:bg-zinc-800"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-zinc-900 border border-zinc-800 hover:bg-zinc-800"
                 >
                   Anterior
                 </button>
