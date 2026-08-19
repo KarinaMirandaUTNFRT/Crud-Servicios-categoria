@@ -1,5 +1,6 @@
 import type { Servicio, ServicioFormData } from "../interfaces/servicios";
-import type { Usuario } from "../interfaces/usuarios";
+import type { Usuario } from "../interfaces/usuarios"
+
 
 const urlServicios = import.meta.env.VITE_SERVICIO + "/servicios";
 const urlCategorias = import.meta.env.VITE_SERVICIO + "/categorias";
