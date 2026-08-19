@@ -14,7 +14,7 @@ const Inicio = () => {
   const [termino, setTermino] = useState(""); //Es lo que el usuario escribe en tiempo real
   const [filtro, setFiltro] = useState(""); //Es el valor confirmado para buscar en el submit
   const [isLoading, setIsLoading] = useState(false);
-  const cantServicios = 8;
+  const cantServicios = 15;
 
   useEffect(() => {
     cargarServicios(paginaActual, filtro);
