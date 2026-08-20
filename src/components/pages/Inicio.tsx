@@ -14,12 +14,13 @@ const Inicio = () => {
   const [termino, setTermino] = useState(""); //Es lo que el usuario escribe en tiempo real
   const [filtro, setFiltro] = useState(""); //Es el valor confirmado para buscar en el submit
   const [isLoading, setIsLoading] = useState(false);
-  const cantServicios = 15;
+  const cantServicios = 5;
 
   useEffect(() => {
     cargarServicios(paginaActual, filtro);
   }, [paginaActual, filtro]);
 
+//obtener y paginar un listado de servicios desde una API,
   const cargarServicios = async (
     paginaNumero: number,
     terminoFiltro: string,

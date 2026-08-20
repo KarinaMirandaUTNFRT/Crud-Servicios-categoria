@@ -12,7 +12,7 @@ const Administrador = () => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [cantidadServicios, setCantidadServicios] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const limitePorPagina = 15; //✅ desde aqui decido cuantos elementos voy a mostrar en la tabla
+  const limitePorPagina = 5; //✅ desde aqui decido cuantos elementos voy a mostrar en la tabla
 
   useEffect(() => {
     cargarServicios(paginaActual);
