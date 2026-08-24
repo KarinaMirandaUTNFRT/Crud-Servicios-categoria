@@ -166,7 +166,7 @@ const FormularioServicio = ({ titulo }: FormularioServicioProps) => {
                     value={categoria._id}
                     className="bg-zinc-900"
                   >
-                    {categoria.nombre}
+                    {categoria.nombreCat}
                   </option>
                 ))}
               </select>

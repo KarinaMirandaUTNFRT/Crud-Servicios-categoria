@@ -51,7 +51,7 @@ const DetalleServicio = () => {
     const categoria =
         typeof servicio.categoria === "string"
             ? servicio.categoria
-            : servicio.categoria?.nombre ?? "Sin categoría";
+            : servicio.categoria?.nombreCat ?? "Sin categoría";
 
     return (
         <div className="max-w-xl mx-auto bg-zinc-900 rounded-lg shadow-lg p-8 mt-8">

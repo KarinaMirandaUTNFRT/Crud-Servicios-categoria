@@ -22,7 +22,7 @@ const Login = () => {
       const usuario = await loginBackend(data.email, data.password);
 
       Swal.fire({
-        title: `Bienvenido ${usuario?.nombre || "usuario"}`,
+        title: `Bienvenido/a ${usuario?.nombreUsuario || "Usuario"}`,
         text: "Ingresando al sistema",
         icon: "success",
         background: "#18181b",
@@ -30,7 +30,7 @@ const Login = () => {
         confirmButtonColor: "#3b82f6",
       });
 
-      if (usuario?.rol === "admin") {
+      if (usuario?.rol === "Admin") {
         navegacion("/administrador");
       } else {
         navegacion("/");

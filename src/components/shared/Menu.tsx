@@ -2,13 +2,14 @@ import { useState } from "react";
 import { LuMenu, LuX, LuCodeXml, LuLogOut } from "react-icons/lu";
 import { Link, NavLink, useNavigate } from "react-router";
 import { useAppContext } from "../../context/AppContext";
+import { GiShoppingCart } from "react-icons/gi";
 
 const Menu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { usuarioLogueado, loadingSession, logoutBackend } = useAppContext();
   const navegacion = useNavigate();
 
-  const isAdmin = usuarioLogueado?.rol === "admin";
+  const isAdmin = usuarioLogueado?.rol === "Admin";
 
   const navLinkStyles = ({ isActive }: { isActive: boolean }) =>
     `block py-2 px-3 transition-colors duration-200 md:p-0 ${
@@ -33,7 +34,6 @@ const Menu = () => {
               Code Company{" "}
             </Link>
           </div>
-
           {/* Botón Hamburguesa (Móvil) */}
           <div className="md:hidden flex items-center">
             <button
@@ -49,22 +49,37 @@ const Menu = () => {
               )}
             </button>
           </div>
-
           {/* Menú Desktop */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-8 capitalize">
+            <div className="ml-10 flex items-center space-x-6 capitalize">
               <NavLink to="/" className={navLinkStyles}>
                 Inicio
               </NavLink>
+
               {loadingSession ? (
                 <span className="text-zinc-400 text-sm">Cargando...</span>
               ) : usuarioLogueado ? (
                 <>
-                 {isAdmin && (
+                  <span className="text-sm font-semibold text-blue-400 normal-case">
+                    {usuarioLogueado.nombreUsuario ||
+                      usuarioLogueado.email ||
+                      "Usuario"}
+                  </span>
+
+                  <Link
+                    to="/carrito"
+                    className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border border-zinc-700"
+                  >
+                    <GiShoppingCart className="text-xl text-blue-400" />
+                    <span>Carrito</span>
+                  </Link>
+
+                  {isAdmin && (
                     <NavLink to="/administrador" className={navLinkStyles}>
                       Administrador
                     </NavLink>
                   )}
+
                   <button
                     onClick={() => void logout()}
                     className="flex items-center gap-2 bg-zinc-800 hover:bg-red-900/40 text-red-400 px-4 py-2 rounded-md text-sm font-medium transition-all border border-zinc-700 hover:border-red-500/50"
@@ -102,9 +117,26 @@ const Menu = () => {
 
           {loadingSession ? (
             <span className="px-3 py-2 text-sm text-zinc-400">Cargando...</span>
-          ) :usuarioLogueado ? (
+          ) : usuarioLogueado ? (
             <>
-               {isAdmin && (
+              <div className="px-3 py-1 text-sm text-zinc-300">
+                 <div className="text-blue-400 font-semibold">
+                  {usuarioLogueado.nombreUsuario ||
+                    usuarioLogueado.email ||
+                    "Usuario"}
+                </div>
+              </div>
+
+              <Link
+                to="/carrito"
+                className="flex items-center gap-2 px-3 py-2 text-zinc-200 hover:bg-zinc-800 rounded-md transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <GiShoppingCart className="text-xl text-blue-400" />
+                <span>Carrito</span>
+              </Link>
+
+              {isAdmin && (
                 <NavLink
                   to="/administrador"
                   className={navLinkStyles}
@@ -113,6 +145,7 @@ const Menu = () => {
                   Administrador
                 </NavLink>
               )}
+
               <button
                 onClick={() => {
                   logout();

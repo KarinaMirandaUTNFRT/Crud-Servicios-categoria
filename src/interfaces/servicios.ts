@@ -1,7 +1,7 @@
 export interface Categoria {
   _id: string;
-  nombre: string;
-  descripcion: string;
+  nombreCat: string;
+  descripcionCat: string;
 }
 
 export interface Servicio {

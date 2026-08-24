@@ -1,6 +1,6 @@
 export interface Usuario {
   _id: string;
-  nombre: string;
+  nombreUsuario: string;
   email: string;
-  rol: "admin" | "cliente"; // Tipamos estrictamente los roles
+  rol: "Admin" | "Cliente"; // Tipamos estrictamente los roles
 }
