@@ -120,8 +120,7 @@ const Menu = () => {
           ) : usuarioLogueado ? (
             <>
               <div className="px-3 py-1 text-sm text-zinc-300">
-                Hola,{" "}
-                <div className="text-blue-400 font-semibold">
+                 <div className="text-blue-400 font-semibold">
                   {usuarioLogueado.nombreUsuario ||
                     usuarioLogueado.email ||
                     "Usuario"}

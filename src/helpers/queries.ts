@@ -220,7 +220,7 @@ export const obtenerCarritoApi = async (): Promise<any> => {
 //🆕 crear preferencia de pago (MercadoPago) - backend crea la preferencia y devuelve init_point
 export const crearPreferenciaPagoApi = async (): Promise<Response> => {
   try {
-    const respuesta = await fetch('http://localhost:3000/api/pago/crear-preferencia', {
+    const respuesta = await fetch('http://localhost:3002/api/pago/crear-preferencia', {
       method: 'POST',
       credentials: 'include',
     });
