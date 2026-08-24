@@ -4,7 +4,7 @@ import Administrador from "./components/pages/Administrador";
 import FormularioServicio from "./components/pages/FormularioServicio";
 import Login from "./components/pages/Login";
 import Footer from "./components/shared/Footer";
-import Menu from "./components/shared/Menu";
+import  Menu  from "./components/shared/Menu";
 import { BrowserRouter, Routes, Route } from "react-router";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import { useEffect, useState } from "react";

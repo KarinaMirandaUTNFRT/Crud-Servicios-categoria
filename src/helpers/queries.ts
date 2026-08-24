@@ -200,7 +200,7 @@ export const obtenerCantidadCarritoApi = async (): Promise<number> => {
 //🆕 obtener carrito completo
 export const obtenerCarritoApi = async (): Promise<any> => {
   try {
-    const respuesta = await fetch('http://localhost:3000/api/carrito', {
+    const respuesta = await fetch('http://localhost:3002/api/carrito', {
       method: 'GET',
       credentials: 'include',
     });

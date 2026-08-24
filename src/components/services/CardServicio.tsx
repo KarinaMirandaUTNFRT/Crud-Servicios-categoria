@@ -5,29 +5,35 @@ import { useAppContext } from "../../context/AppContext";
 import { formatearPrecio } from "../../utils/formateador";
 import { agregarAlCarritoApi } from "../../helpers/queries";
 
-
 interface CardServicioProps {
   servicio: Servicio;
 }
 
 const CardServicio = ({ servicio }: CardServicioProps) => {
- const { usuarioLogueado, refreshCarritoCount } = useAppContext();
+  const { usuarioLogueado, refreshCarritoCount } = useAppContext();
   const [cantidad, setCantidad] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const formatearPrecio = (valor: number) => {
-    return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
-  };
+  //const formatearPrecio = (valor: number) => {
+    //return new Intl.NumberFormat("es-AR", {
+      //style: "currency",
+      //currency: "ARS",
+    //}).format(valor);
+  //};
 
-
-    const categoria =
+  const categoria =
     typeof servicio.categoria === "string"
       ? servicio.categoria
-      : servicio.categoria?.nombreCat ?? "Sin categoría";
-const handleAgregar = async () => {
+      : (servicio.categoria?.nombreCat ?? "Sin categoría");
+  
+      const handleAgregar = async () => {
     if (!usuarioLogueado) {
       try {
-        window.dispatchEvent(new CustomEvent("toast", { detail: { message: "Debes iniciar sesión para agregar al carrito" } }));
+        window.dispatchEvent(
+          new CustomEvent("toast", {
+            detail: { message: "Debes iniciar sesión para agregar al carrito" },
+          }),
+        );
       } catch (e) {
         // fallback
         // @ts-ignore
@@ -42,7 +48,11 @@ const handleAgregar = async () => {
       if (resp.ok) {
         await refreshCarritoCount();
         try {
-          window.dispatchEvent(new CustomEvent("toast", { detail: { message: "Servicio agregado al carrito con éxito" } }));
+          window.dispatchEvent(
+            new CustomEvent("toast", {
+              detail: { message: "Servicio agregado al carrito con éxito" },
+            }),
+          );
         } catch (e) {
           // fallback
           // @ts-ignore
@@ -62,13 +72,13 @@ const handleAgregar = async () => {
       {/* Contenedor de Imagen */}
       <div className="relative h-48 overflow-hidden">
         <img
-           src={servicio.imagen}
+          src={servicio.imagen}
           alt={servicio.nombreServicio}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute top-2 right-2">
           <span className="bg-zinc-950/80 backdrop-blur-sm text-blue-400 text-xs font-bold px-2 py-1 rounded border border-zinc-700 uppercase tracking-wider">
-              {categoria}
+            {categoria}
           </span>
         </div>
       </div>
@@ -78,24 +88,53 @@ const handleAgregar = async () => {
         <h3 className="text-xl font-bold text-zinc-100 mb-2 group-hover:text-blue-400 transition-colors">
           {servicio.nombreServicio}
         </h3>
-        
+
         <p className="text-zinc-400 text-sm line-clamp-3 mb-4 grow">
-           {servicio.descripcion}
+          {servicio.descripcion}
         </p>
 
         <div className="pt-4 border-t border-zinc-800 mt-auto">
           <div className="flex items-center justify-between gap-2">
             <div>
-              <p className="text-xs text-zinc-500 uppercase font-semibold">Precio</p>
+              <p className="text-xs text-zinc-500 uppercase font-semibold">
+                Precio
+              </p>
               <p className="text-lg font-mono text-zinc-200">
                 {formatearPrecio(servicio.precio)}
               </p>
             </div>
-            
-            <Link to={`servicio/${servicio._id}`} className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-md shadow-blue-900/20 active:scale-95">
+
+            <Link
+              to={`servicio/${servicio._id}`}
+              className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-md shadow-blue-900/20 active:scale-95"
+            >
               Ver detalle
             </Link>
           </div>
+
+{/* Acciones de compra */}
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="1"
+              value={cantidad}
+              onChange={(e) => setCantidad(Math.max(1, Number(e.target.value)))}
+              disabled={loading}
+              className="w-16 rounded border border-zinc-700 bg-zinc-950 px-2 py-1.5 text-center text-zinc-100 text-sm focus:outline-none focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={handleAgregar}
+              disabled={loading}
+              className="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-1.5 px-3 rounded-lg text-sm font-bold transition-colors shadow-md shadow-blue-900/20 active:scale-95 disabled:opacity-50"
+            >
+              {loading ? "Agregando..." : "Agregar al carrito"}
+            </button>
+          </div>
+
+
+
+
         </div>
       </div>
     </article>
