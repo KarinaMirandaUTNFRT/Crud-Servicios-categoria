@@ -8,7 +8,7 @@ import {
   restarDelCarritoApi,
     
 } from "../../helpers/queries";
-import {link, useNavigate} from "react-router"
+import {Link, useNavigate} from "react-router"
 
 const Carrito = () => {
   const { usuarioLogueado, refreshCarritoCount } = useAppContext();
