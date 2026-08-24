@@ -7,7 +7,9 @@ export interface AppContextType {
   setUsuarioLogueado: React.Dispatch<React.SetStateAction<Usuario | null>>;
   loginBackend: (email: string, pass: string) => Promise<Usuario | null>; //funcion de login
   logoutBackend: () => Promise<void>; //funcion de logout
-
+    carritoCount: number;
+    setCarritoCount: React.Dispatch<React.SetStateAction<number>>;
+  refreshCarritoCount: () => Promise<void>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
