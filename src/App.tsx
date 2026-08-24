@@ -12,7 +12,7 @@ import { AppContext } from "./context/AppContext";
 //import type { Servicio } from "./interfaces/servicios";
 import DetalleServicio from "./components/pages/DetalleServicio";
 import Carrito from "./components/pages/carrito";
-import CheckoutResultado from "./components/pages/CheckoutResultado.js";
+import CheckoutResultado from "./components/pages/CheckoutResultado";
 import type { Usuario } from "./interfaces/usuarios";
 import {
   loginBackendApi,

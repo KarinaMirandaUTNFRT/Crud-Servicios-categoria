@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import type { Servicio } from "../../interfaces/servicios";
+import { useAppContext } from "../../context/AppContext";
 import { formatearPrecio } from "../../utils/formateador";
+import { agregarAlCarritoApi } from "../../helpers/queries";
 
 
 interface CardServicioProps {
@@ -8,12 +11,52 @@ interface CardServicioProps {
 }
 
 const CardServicio = ({ servicio }: CardServicioProps) => {
- 
+ const { usuarioLogueado, refreshCarritoCount } = useAppContext();
+  const [cantidad, setCantidad] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const formatearPrecio = (valor: number) => {
+    return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
+  };
+
+
     const categoria =
     typeof servicio.categoria === "string"
       ? servicio.categoria
       : servicio.categoria?.nombreCat ?? "Sin categoría";
-
+const handleAgregar = async () => {
+    if (!usuarioLogueado) {
+      try {
+        window.dispatchEvent(new CustomEvent("toast", { detail: { message: "Debes iniciar sesión para agregar al carrito" } }));
+      } catch (e) {
+        // fallback
+        // @ts-ignore
+        window.dispatchEvent(new Event("toast"));
+      }
+      return;
+    }
+    if (!servicio._id) return;
+    setLoading(true);
+    try {
+      const resp = await agregarAlCarritoApi(servicio._id, cantidad);
+      if (resp.ok) {
+        await refreshCarritoCount();
+        try {
+          window.dispatchEvent(new CustomEvent("toast", { detail: { message: "Servicio agregado al carrito con éxito" } }));
+        } catch (e) {
+          // fallback
+          // @ts-ignore
+          window.dispatchEvent(new Event("toast"));
+        }
+      } else {
+        console.error("Error agregando al carrito", resp.status);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <article className="group bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10 flex flex-col h-full">
       {/* Contenedor de Imagen */}
